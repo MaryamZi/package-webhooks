@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.ballerinalang.net.webhook.github;
+package org.ballerinalang.net.webhook;
 
 import org.ballerinalang.annotation.JavaSPIService;
 import org.ballerinalang.spi.SystemPackageRepositoryProvider;

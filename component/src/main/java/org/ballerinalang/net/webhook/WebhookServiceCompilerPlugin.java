@@ -1,4 +1,4 @@
-package org.ballerinalang.net.webhook.github;
+package org.ballerinalang.net.webhook;
 
 import org.ballerinalang.compiler.plugins.AbstractCompilerPlugin;
 import org.ballerinalang.compiler.plugins.SupportEndpointTypes;
@@ -8,7 +8,7 @@ import org.ballerinalang.util.diagnostic.DiagnosticLog;
  * Compiler Plugin for GitHub Webhooks.
  */
 @SupportEndpointTypes(
-        value = {@SupportEndpointTypes.EndpointType(packageName = "ballerina.net.webhook.github",
+        value = {@SupportEndpointTypes.EndpointType(packageName = "ballerina.net.webhook",
                 name = "GitHubWebhookEndpoint")
         }
 )

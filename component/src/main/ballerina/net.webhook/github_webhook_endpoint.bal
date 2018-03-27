@@ -1,4 +1,4 @@
-package ballerina.net.webhook.github;
+package ballerina.net.webhook;
 
 import ballerina/net.http;
 import ballerina/net.websub;
