@@ -3,9 +3,21 @@ package ballerina.webhook;
 import ballerina/http;
 import ballerina/websub;
 
-///////////////////////////////////////////////////////////
-/// GitHub Webhook (WebSub Subscriber Service Endpoint) ///
-///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+/// GitHub Webhook Service (WebSub Subscriber Service) ///
+//////////////////////////////////////////////////////////
+public type GitHubService object {
+
+    public function getEndpoint() returns (GitHubListener) {
+        GitHubListener ep = new;
+        return ep;
+    }
+
+};
+
+////////////////////////////////////////////////////////////////////
+/// GitHub Webhook Endpoint (WebSub Subscriber Service Endpoint) ///
+////////////////////////////////////////////////////////////////////
 @Description {value:"Struct representing the GitHub Webhook (WebSub Subscriber Service) Endpoint"}
 @Field {value:"config: The configuration for the endpoint"}
 @Field {value:"serviceEndpoint: The underlying HTTP service endpoint"}
