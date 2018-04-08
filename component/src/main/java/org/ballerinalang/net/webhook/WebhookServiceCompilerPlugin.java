@@ -8,8 +8,8 @@ import org.ballerinalang.util.diagnostic.DiagnosticLog;
  * Compiler Plugin for GitHub Webhooks.
  */
 @SupportEndpointTypes(
-        value = {@SupportEndpointTypes.EndpointType(packageName = "ballerina.net.webhook",
-                name = "GitHubWebhookEndpoint")
+        value = {@SupportEndpointTypes.EndpointType(packageName = "ballerina.webhook",
+                name = "GitHubListener")
         }
 )
 public class WebhookServiceCompilerPlugin extends AbstractCompilerPlugin {

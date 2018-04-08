@@ -1,7 +1,7 @@
-package ballerina.net.webhook;
+package ballerina.webhook;
 
-import ballerina/net.http;
-import ballerina/net.websub;
+import ballerina/http;
+import ballerina/websub;
 
 ///////////////////////////////////////////////////////////
 /// GitHub Webhook (WebSub Subscriber Service Endpoint) ///
@@ -9,24 +9,47 @@ import ballerina/net.websub;
 @Description {value:"Struct representing the GitHub Webhook (WebSub Subscriber Service) Endpoint"}
 @Field {value:"config: The configuration for the endpoint"}
 @Field {value:"serviceEndpoint: The underlying HTTP service endpoint"}
-public struct GitHubWebhookEndpoint {
-    GitHubWebhookEndpointConfiguration config;
-    websub:SubscriberServiceEndpoint subscriberServiceEndpoint;
-}
+public type GitHubListener object {
 
-public struct GitHubWebhookEndpointConfiguration {
-    string host;
-    int port;
-}
+    public {
+        GitHubListenerConfiguration config;
+    }
 
-public function <GitHubWebhookEndpoint ep> GitHubWebhookEndpoint() {
-    ep.subscriberServiceEndpoint = {};
-}
+    private {
+        websub:SubscriberServiceEndpoint subscriberServiceEndpoint;
+    }
 
-@Description {value:"Gets called when the endpoint is being initialized during package init"}
-@Param {value:"config: The SubscriberServiceEndpointConfiguration of the endpoint"}
-public function <GitHubWebhookEndpoint ep> init (GitHubWebhookEndpointConfiguration config) {
-    ep.config = config;
+    public new() {
+        websub:SubscriberServiceEndpoint subscriberServiceEndpoint = new;
+    }
+
+    @Description {value:"Gets called when the endpoint is being initialized during package init"}
+    @Param {value:"config: The SubscriberServiceEndpointConfiguration of the endpoint"}
+    public function init(GitHubListenerConfiguration config);
+
+    @Description {value:"Gets called whenever a service attaches itself to this endpoint and during package init"}
+    @Param {value:"serviceType: The service attached"}
+    public function register(typedesc serviceType);
+
+    @Description {value:"Starts the registered service"}
+    public function start();
+
+    @Description {value:"Returns the connector that client code uses"}
+    @Return {value:"The connector that client code uses"}
+    public function getClient() returns (http:Connection);
+
+    @Description {value:"Stops the registered service"}
+    public function stop();
+
+};
+
+public type GitHubListenerConfiguration {
+    string host,
+    int port,
+};
+
+public function GitHubListener::init(GitHubListenerConfiguration config) {
+    self.config = config;
     websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
     sseConfig.topicHeader = "X-GitHub-Event";
     sseConfig.topicResourceMap = { "commit_comment" : "onCommitComment",
@@ -62,27 +85,21 @@ public function <GitHubWebhookEndpoint ep> init (GitHubWebhookEndpointConfigurat
                                 "team" : "onTeam",
                                 "team_add" : "onTeamAdd",
                                 "watch" : "onWatch"};
-    ep.subscriberServiceEndpoint.init(sseConfig);
+    subscriberServiceEndpoint.init(sseConfig);
 }
 
-@Description {value:"Gets called whenever a service attaches itself to this endpoint and during package init"}
-@Param {value:"serviceType: The service attached"}
-public function <GitHubWebhookEndpoint ep> register (typedesc serviceType) {
-    ep.subscriberServiceEndpoint.register(serviceType);
+public function GitHubListener::register(typedesc serviceType) {
+    subscriberServiceEndpoint.register(serviceType);
 }
 
-@Description {value:"Starts the registered service"}
-public function <GitHubWebhookEndpoint ep> start () {
-    ep.subscriberServiceEndpoint.start();
+public function GitHubListener::start() {
+    subscriberServiceEndpoint.start();
 }
 
-@Description {value:"Returns the connector that client code uses"}
-@Return {value:"The connector that client code uses"}
-public function <GitHubWebhookEndpoint ep> getClient () returns (http:Connection) {
-    return ep.subscriberServiceEndpoint.getClient();
+public function GitHubListener::getClient() returns (http:Connection) {
+    return subscriberServiceEndpoint.getClient();
 }
 
-@Description {value:"Stops the registered service"}
-public function <GitHubWebhookEndpoint ep> stop () {
-    ep.subscriberServiceEndpoint.stop();
+public function GitHubListener::stop () {
+    subscriberServiceEndpoint.stop();
 }
