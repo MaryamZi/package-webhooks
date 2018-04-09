@@ -32,7 +32,7 @@ public type GitHubListener object {
     }
 
     public new() {
-        websub:SubscriberServiceEndpoint subscriberServiceEndpoint = new;
+        subscriberServiceEndpoint = new;
     }
 
     @Description {value:"Gets called when the endpoint is being initialized during package init"}
