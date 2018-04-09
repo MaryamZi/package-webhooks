@@ -63,40 +63,50 @@ public type GitHubListenerConfiguration {
 public function GitHubListener::init(GitHubListenerConfiguration config) {
     self.config = config;
     websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
+    sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
     sseConfig.topicHeader = "X-GitHub-Event";
-    sseConfig.topicResourceMap = { "commit_comment" : "onCommitComment",
-                                "create" : "onCreate",
-                                "delete" : "onDelete",
-                                "deployment" : "onDeployment",
-                                "deployment_status" : "onDeploymentStatus",
-                                "fork" : "onFork",
-                                "gollum" : "onGollum",
-                                "installation" : "onInstallation",
-                                "installation_repositories" : "onInstallationRepositories",
-                                "issue_comment" : "onIssueComment",
-                                "issues" : "onIssues",
-                                "label" : "onLabel",
-                                "marketplace_purchase" : "onMarketplacePurchase",
-                                "member" : "onMember",
-                                "membership" : "onMembership",
-                                "milestone" : "onMilestone",
-                                "organization" : "onOrganization",
-                                "org_block" : "onOrgBlock",
-                                "page_build" : "onPageBuild",
-                                "project_card" : "onProject_card",
-                                "project_column" : "onProjectColumn",
-                                "project" : "onProject",
-                                "public" : "onPublic",
-                                "pull_request" : "onPullRequest",
-                                "pull_request_review" : "onPullRequestReview",
-                                "pull_request_review_comment" : "onPullRequestReviewComment",
-                                "push" : "onPush",
-                                "release" : "onRelease",
-                                "repository" : "onRepository",
-                                "status" : "onStatus",
-                                "team" : "onTeam",
-                                "team_add" : "onTeamAdd",
-                                "watch" : "onWatch"};
+    sseConfig.topicPayloadKeys = ["action"];
+    sseConfig.topicResourceMap = {
+                                    "action" : {
+                                        "issue_comment::created" : "onIssueCommentCreated",
+                                        "issue_comment::edited" : "onIssueCommentEdited",
+                                        "issue_comment::deleted" : "onIssueCommentDeleted",
+                                        "issues::edited" : "onIssuesEdited"
+                                    },
+                                    "TOPIC_ID_HEADER" : {
+                                        "commit_comment" : "onCommitComment",
+                                        "create" : "onCreate",
+                                        "delete" : "onDelete",
+                                        "deployment" : "onDeployment",
+                                        "deployment_status" : "onDeploymentStatus",
+                                        "fork" : "onFork",
+                                        "gollum" : "onGollum",
+                                        "installation" : "onInstallation",
+                                        "installation_repositories" : "onInstallationRepositories",
+                                        "label" : "onLabel",
+                                        "marketplace_purchase" : "onMarketplacePurchase",
+                                        "member" : "onMember",
+                                        "membership" : "onMembership",
+                                        "milestone" : "onMilestone",
+                                        "organization" : "onOrganization",
+                                        "org_block" : "onOrgBlock",
+                                        "page_build" : "onPageBuild",
+                                        "project_card" : "onProject_card",
+                                        "project_column" : "onProjectColumn",
+                                        "project" : "onProject",
+                                        "public" : "onPublic",
+                                        "pull_request" : "onPullRequest",
+                                        "pull_request_review" : "onPullRequestReview",
+                                        "pull_request_review_comment" : "onPullRequestReviewComment",
+                                        "push" : "onPush",
+                                        "release" : "onRelease",
+                                        "repository" : "onRepository",
+                                        "status" : "onStatus",
+                                        "team" : "onTeam",
+                                        "team_add" : "onTeamAdd",
+                                        "watch" : "onWatch"
+                                    }
+                                };
     subscriberServiceEndpoint.init(sseConfig);
 }
 
