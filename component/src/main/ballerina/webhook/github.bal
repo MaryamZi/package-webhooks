@@ -28,11 +28,11 @@ public type GitHubListener object {
     }
 
     private {
-        websub:SubscriberServiceEndpoint subscriberServiceEndpoint;
+        websub:Listener websubListener;
     }
 
     public new() {
-        subscriberServiceEndpoint = new;
+        websubListener = new;
     }
 
     @Description {value:"Gets called when the endpoint is being initialized during package init"}
@@ -107,21 +107,21 @@ public function GitHubListener::init(GitHubListenerConfiguration config) {
                                         "watch" : "onWatch"
                                     }
                                 };
-    subscriberServiceEndpoint.init(sseConfig);
+    websubListener.init(sseConfig);
 }
 
 public function GitHubListener::register(typedesc serviceType) {
-    subscriberServiceEndpoint.register(serviceType);
+    websubListener.register(serviceType);
 }
 
 public function GitHubListener::start() {
-    subscriberServiceEndpoint.start();
+    websubListener.start();
 }
 
 public function GitHubListener::getClient() returns (http:Connection) {
-    return subscriberServiceEndpoint.getClient();
+    return websubListener.getClient();
 }
 
 public function GitHubListener::stop () {
-    subscriberServiceEndpoint.stop();
+    websubListener.stop();
 }
