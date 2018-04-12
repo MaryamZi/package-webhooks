@@ -107,21 +107,21 @@ public function GitHubListener::init(GitHubListenerConfiguration config) {
                                         "watch" : "onWatch"
                                     }
                                 };
-    websubListener.init(sseConfig);
+    self.websubListener.init(sseConfig);
 }
 
 public function GitHubListener::register(typedesc serviceType) {
-    websubListener.register(serviceType);
+    self.websubListener.register(serviceType);
 }
 
 public function GitHubListener::start() {
-    websubListener.start();
+    self.websubListener.start();
 }
 
 public function GitHubListener::getClient() returns (http:Connection) {
-    return websubListener.getClient();
+    return self.websubListener.getClient();
 }
 
 public function GitHubListener::stop () {
-    websubListener.stop();
+    self.websubListener.stop();
 }
