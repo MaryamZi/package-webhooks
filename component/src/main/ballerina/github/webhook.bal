@@ -58,12 +58,11 @@ public type WebhookListener object {
 public type WebhookListenerConfiguration {
     string host,
     int port,
-    http:AuthConfig? auth,
 };
 
 public function WebhookListener::init(WebhookListenerConfiguration config) {
     self.config = config;
-    websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port, auth:config.auth };
+    websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
     sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
     sseConfig.topicHeader = GITHUB_TOPIC_HEADER;
     sseConfig.topicPayloadKeys = ["action"];
