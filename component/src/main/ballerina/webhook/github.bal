@@ -67,47 +67,7 @@ public function GitHubListener::init(GitHubListenerConfiguration config) {
     sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
     sseConfig.topicHeader = "X-GitHub-Event";
     sseConfig.topicPayloadKeys = ["action"];
-    sseConfig.topicResourceMap = {
-                                    "action" : {
-                                        "issue_comment::created" : "onIssueCommentCreated",
-                                        "issue_comment::edited" : "onIssueCommentEdited",
-                                        "issue_comment::deleted" : "onIssueCommentDeleted",
-                                        "issues::edited" : "onIssuesEdited"
-                                    },
-                                    "TOPIC_ID_HEADER" : {
-                                        "commit_comment" : "onCommitComment",
-                                        "create" : "onCreate",
-                                        "delete" : "onDelete",
-                                        "deployment" : "onDeployment",
-                                        "deployment_status" : "onDeploymentStatus",
-                                        "fork" : "onFork",
-                                        "gollum" : "onGollum",
-                                        "installation" : "onInstallation",
-                                        "installation_repositories" : "onInstallationRepositories",
-                                        "label" : "onLabel",
-                                        "marketplace_purchase" : "onMarketplacePurchase",
-                                        "member" : "onMember",
-                                        "membership" : "onMembership",
-                                        "milestone" : "onMilestone",
-                                        "organization" : "onOrganization",
-                                        "org_block" : "onOrgBlock",
-                                        "page_build" : "onPageBuild",
-                                        "project_card" : "onProject_card",
-                                        "project_column" : "onProjectColumn",
-                                        "project" : "onProject",
-                                        "public" : "onPublic",
-                                        "pull_request" : "onPullRequest",
-                                        "pull_request_review" : "onPullRequestReview",
-                                        "pull_request_review_comment" : "onPullRequestReviewComment",
-                                        "push" : "onPush",
-                                        "release" : "onRelease",
-                                        "repository" : "onRepository",
-                                        "status" : "onStatus",
-                                        "team" : "onTeam",
-                                        "team_add" : "onTeamAdd",
-                                        "watch" : "onWatch"
-                                    }
-                                };
+    sseConfig.topicResourceMap = GITHUB_TOPIC_RESOURCE_MAP;
     self.websubListener.init(sseConfig);
 }
 
@@ -126,3 +86,54 @@ public function GitHubListener::getClient() returns (http:Connection) {
 public function GitHubListener::stop () {
     self.websubListener.stop();
 }
+
+@final map<map<string>> GITHUB_TOPIC_RESOURCE_MAP = {
+    "action" : {
+        "issue_comment::created" : "onIssueCommentCreated",
+        "issue_comment::edited" : "onIssueCommentEdited",
+        "issue_comment::deleted" : "onIssueCommentDeleted",
+        "issues::assigned" : "onIssuesAssigned",
+        "issues::unassigned" : "onIssuesUnassigned",
+        "issues::labeled" : "onIssuesLabeled",
+        "issues::unlabeled" : "onIssuesUnlabeled",
+        "issues::opened" : "onIssuesOpened",
+        "issues::edited" : "onIssuesEdited",
+        "issues::milestoned" : "onIssuesMilestoned",
+        "issues::demilestoned" : "onIssuesDemilestoned",
+        "issues::closed" : "onIssuesClosed",
+        "issues::reopened" : "onIssuesReopened"
+    },
+    "TOPIC_ID_HEADER" : {
+        "commit_comment" : "onCommitComment",
+        "create" : "onCreate",
+        "delete" : "onDelete",
+        "deployment" : "onDeployment",
+        "deployment_status" : "onDeploymentStatus",
+        "fork" : "onFork",
+        "gollum" : "onGollum",
+        "installation" : "onInstallation",
+        "installation_repositories" : "onInstallationRepositories",
+        "label" : "onLabel",
+        "marketplace_purchase" : "onMarketplacePurchase",
+        "member" : "onMember",
+        "membership" : "onMembership",
+        "milestone" : "onMilestone",
+        "organization" : "onOrganization",
+        "org_block" : "onOrgBlock",
+        "page_build" : "onPageBuild",
+        "project_card" : "onProject_card",
+        "project_column" : "onProjectColumn",
+        "project" : "onProject",
+        "public" : "onPublic",
+        "pull_request" : "onPullRequest",
+        "pull_request_review" : "onPullRequestReview",
+        "pull_request_review_comment" : "onPullRequestReviewComment",
+        "push" : "onPush",
+        "release" : "onRelease",
+        "repository" : "onRepository",
+        "status" : "onStatus",
+        "team" : "onTeam",
+        "team_add" : "onTeamAdd",
+        "watch" : "onWatch"
+    }
+};
