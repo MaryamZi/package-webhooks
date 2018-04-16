@@ -1,4 +1,4 @@
-package ballerina.webhook;
+package ballerina.github;
 
 import ballerina/http;
 import ballerina/websub;
@@ -6,10 +6,10 @@ import ballerina/websub;
 //////////////////////////////////////////////////////////
 /// GitHub Webhook Service (WebSub Subscriber Service) ///
 //////////////////////////////////////////////////////////
-public type GitHubService object {
+public type WebhookService object {
 
-    public function getEndpoint() returns (GitHubListener) {
-        GitHubListener ep = new;
+    public function getEndpoint() returns (WebhookListener) {
+        WebhookListener ep = new;
         return ep;
     }
 
@@ -21,10 +21,10 @@ public type GitHubService object {
 @Description {value:"Struct representing the GitHub Webhook (WebSub Subscriber Service) Endpoint"}
 @Field {value:"config: The configuration for the endpoint"}
 @Field {value:"serviceEndpoint: The underlying HTTP service endpoint"}
-public type GitHubListener object {
+public type WebhookListener object {
 
     public {
-        GitHubListenerConfiguration config;
+        WebhookListenerConfiguration config;
     }
 
     private {
@@ -37,7 +37,7 @@ public type GitHubListener object {
 
     @Description {value:"Gets called when the endpoint is being initialized during package init"}
     @Param {value:"config: The SubscriberServiceEndpointConfiguration of the endpoint"}
-    public function init(GitHubListenerConfiguration config);
+    public function init(WebhookListenerConfiguration config);
 
     @Description {value:"Gets called whenever a service attaches itself to this endpoint and during package init"}
     @Param {value:"serviceType: The service attached"}
@@ -55,37 +55,39 @@ public type GitHubListener object {
 
 };
 
-public type GitHubListenerConfiguration {
+public type WebhookListenerConfiguration {
     string host,
     int port,
     http:AuthConfig? auth,
 };
 
-public function GitHubListener::init(GitHubListenerConfiguration config) {
+public function WebhookListener::init(WebhookListenerConfiguration config) {
     self.config = config;
     websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port, auth:config.auth };
     sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
-    sseConfig.topicHeader = "X-GitHub-Event";
+    sseConfig.topicHeader = GITHUB_TOPIC_HEADER;
     sseConfig.topicPayloadKeys = ["action"];
     sseConfig.topicResourceMap = GITHUB_TOPIC_RESOURCE_MAP;
     self.websubListener.init(sseConfig);
 }
 
-public function GitHubListener::register(typedesc serviceType) {
+public function WebhookListener::register(typedesc serviceType) {
     self.websubListener.register(serviceType);
 }
 
-public function GitHubListener::start() {
+public function WebhookListener::start() {
     self.websubListener.start();
 }
 
-public function GitHubListener::getClient() returns (http:Connection) {
+public function WebhookListener::getClient() returns (http:Connection) {
     return self.websubListener.getClient();
 }
 
-public function GitHubListener::stop () {
+public function WebhookListener::stop () {
     self.websubListener.stop();
 }
+
+@final string GITHUB_TOPIC_HEADER = "X-GitHub-Event";
 
 @final map<map<string>> GITHUB_TOPIC_RESOURCE_MAP = {
     "action" : {
