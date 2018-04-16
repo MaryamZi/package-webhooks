@@ -58,11 +58,12 @@ public type GitHubListener object {
 public type GitHubListenerConfiguration {
     string host,
     int port,
+    http:AuthConfig? auth,
 };
 
 public function GitHubListener::init(GitHubListenerConfiguration config) {
     self.config = config;
-    websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
+    websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port, auth:config.auth };
     sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
     sseConfig.topicHeader = "X-GitHub-Event";
     sseConfig.topicPayloadKeys = ["action"];
